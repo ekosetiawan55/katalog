@@ -4,20 +4,20 @@
     "title": "Paket Akad 1",
     "price": 600000,
     "image": "akad1.jpg",
-    "description": "Paket dokumentasi tanpa album foto | 2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | Dikirim melalui Google Drive"
+    "description": "2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | Dikirim melalui Google Drive"
   },
   {
     "id": 2,
     "title": "Paket Akad 2",
     "price": 750000,
     "image": "akad2.jpg",
-    "description": "Paket dokumentasi dengan album foto magnetik yang keren dan modern | 2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | Dikirim via Google Drive"
+    "description": "2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | Magnetic Foto Album isi 40 gambar | Dikirim via Google Drive"
   },
   {
     "id": 3,
     "title": "Paket Wedding 1",
     "price": 800000,
     "image": "wedding1.jpg",
-    "description": "Paket dokumentasi wedding full acara, mulai dari make up hingga resepsi maksimal 6 jam | 2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | File dikirim via Google Drive"
+    "description": "2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | File dikirim via Google Drive"
   }
 ]
