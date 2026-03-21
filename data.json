@@ -5,6 +5,11 @@
     "price": 600000,
     "image": "akad1.jpg",
     "description": "2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | Dikirim melalui Google Drive"
+    "gallery": [
+      "akad1.jpg",
+      "akad12.jpg",
+      "akad13.jpg"
+    ]
   },
   {
     "id": 2,
@@ -12,6 +17,11 @@
     "price": 750000,
     "image": "akad2.jpg",
     "description": "2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | Magnetic Foto Album isi 40 gambar | Dikirim via Google Drive"
+    "gallery": [
+      "akad2.jpg",
+      "akad22.jpg",
+      "akad23.jpg"
+    ]
   },
   {
     "id": 3,
@@ -19,6 +29,11 @@
     "price": 800000,
     "image": "wedding1.jpg",
     "description": "2 Fotografer | 1 Crew | Unlimited foto | 20 Foto edit | File dikirim via Google Drive"
+    "gallery": [
+      "wedding1.jpg",
+      "wedding12.jpg",
+      "wedding13.jpg"
+    ]
   },
   {
     "id": 4,
@@ -26,6 +41,11 @@
     "price": 1000000,
     "image": "wedding2.jpg",
     "description": "2 Fotografer | 1 Crew | Unlimited foto | 30 Foto edit | Magnetic Album Foto | Cetak 10R plus Figura | File dikirim via Google Drive | Bonus Flasdisk"
+    "gallery": [
+      "wedding2.jpg",
+      "wedding22.jpg",
+      "wedding23.jpg"
+    ]
   },
   {
     "id": 5,
@@ -33,6 +53,11 @@
     "price": 700000,
     "image": "prewedding.jpg",
     "description": "1 Fotografer | 1 Crew | Unlimited foto | 2 jam sesi pemotretan | Cetak foto 10R plus Figura | File dikirim via Google Drive"
+    "gallery": [
+      "prewedding.jpg",
+      "prewedding2.jpg",
+      "prewedding3.jpg"
+    ]
   },
   {
     "id": 6,
@@ -40,6 +65,11 @@
     "price": 500000,
     "image": "lamaran.jpg",
     "description": "1 Fotografer | 1 Crew | Unlimited foto | 2 jam sesi pemotretan | File dikirim via Google Drive"
+    "gallery": [
+      "lamaran1.jpg",
+      "lamaran2.jpg",
+      "lamaran3.jpg"
+    ]
   },
   {
     "id": 7,
@@ -47,6 +77,11 @@
     "price": 600000,
     "image": "boyongan1.jpg",
     "description": "2 Fotografer | 1 Crew | Unlimited foto | 30 Foto edit | File dikirim via Google Drive"
+    "gallery": [
+      "boyongan1.jpg",
+      "boyongan12.jpg",
+      "boyongan13.jpg"
+    ]
   },
   {
     "id": 8,
@@ -54,5 +89,7 @@
     "price": 750000,
     "image": "boyongan2.jpg",
     "description": "2 Fotografer | 1 Crew | Unlimited foto | 30 Foto edit | Album Foto magnetic | File dikirim via Google Drive"
-  }
-]
+    "gallery": [
+      "boyongan2.jpg",
+      "boyongan22.jpg",
+      "boyongan23.jpg
