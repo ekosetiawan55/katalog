@@ -6,433 +6,115 @@
   <title>Katalog Produk</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
   <style>
     .card-hover { transition: all 0.3s; }
     .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
     .modal { animation: pop 0.3s ease-out; }
     @keyframes pop { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-    
-    /* Tombol aksi produk */
-    .btn-preview { 
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      transition: all 0.3s;
-    }
-    .btn-preview:hover { 
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      transform: scale(1.05);
-    }
-    .btn-order { 
-      background: linear-gradient(135deg, #10b981, #059669);
-      transition: all 0.3s;
-    }
-    .btn-order:hover { 
-      background: linear-gradient(135deg, #059669, #047857);
-      transform: scale(1.05);
-    }
-    .btn-action {
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-    }
-    
-    /* 📱 Fix Mobile Modal Scroll */
+
+    .btn-preview { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .btn-order { background: linear-gradient(135deg, #10b981, #059669); }
+
     .modal-content {
       max-height: 90vh;
       overflow-y: auto;
-      -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
-    }
-    
-    /* Hide scrollbar tapi tetap bisa scroll */
-    .modal-content::-webkit-scrollbar {
-      width: 4px;
-    }
-    .modal-content::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .modal-content::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 10px;
     }
   </style>
 </head>
+
 <body class="bg-gray-50 font-sans">
 
-  <!-- HEADER -->
-  <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center">
-      <h1 class="text-2xl sm:text-3xl font-bold text-emerald-600">KatalogKu</h1>
-      <button onclick="showAddModal()" 
-              class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl flex items-center gap-2 font-medium text-sm sm:text-base">
-        <i class="fas fa-plus"></i> <span class="hidden sm:inline">Tambah Barang</span><span class="sm:hidden">Tambah</span>
-      </button>
-    </div>
-  </header>
-
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-    <!-- SEARCH -->
-    <div class="mb-6 sm:mb-8">
-      <input id="searchInput" 
-             onkeyup="filterProducts()"
-             type="text" 
-             placeholder="Cari produk..." 
-             class="w-full px-5 sm:px-6 py-4 rounded-3xl border border-gray-200 focus:outline-none focus:border-emerald-500 text-base sm:text-lg">
-    </div>
-
-    <!-- GRID KATALOG -->
-    <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-      <!-- JS akan isi otomatis -->
-    </div>
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-emerald-600">KatalogKu</h1>
   </div>
+</header>
 
-  <!-- 🔧 MODAL DETAIL PRODUK - FIXED FOR MOBILE -->
-  <div id="detailModal" class="hidden fixed inset-0 bg-black/70 flex items-end sm:items-center justify-center z-[100] p-0 sm:p-4">
-    <div class="modal bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-4xl sm:mx-4 modal-content relative">
-      
-      <!-- Close Button - Sticky di Top -->
-      <button onclick="closeModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-gray-800 shadow-lg text-xl sm:text-3xl transition">
-        <i class="fas fa-times"></i>
-      </button>
-      
-      <div class="p-5 sm:p-8">
-        <!-- Title -->
-        <h2 id="modalTitle" class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 pr-10"></h2>
+<div class="max-w-7xl mx-auto px-4 py-6">
 
-        <!-- 📱 Foto Utama - Responsive Height -->
-        <div class="mb-5 sm:mb-6">
-          <img id="modalMainImage" class="w-full h-56 sm:h-96 object-cover rounded-2xl shadow-md" alt="">
-        </div>
+  <input id="searchInput" onkeyup="filterProducts()" type="text"
+    placeholder="Cari produk..."
+    class="w-full px-5 py-3 mb-6 rounded-xl border">
 
-        <!-- Galeri Foto Tambahan - Scroll Horizontal -->
-        <div class="mb-6 sm:mb-8">
-          <p class="text-sm text-gray-500 mb-3">Foto Lainnya</p>
-          <div id="modalGallery" class="flex gap-3 sm:gap-4 overflow-x-auto pb-2 sm:pb-4 snap-x scrollbar-hide">
-            <!-- JS isi -->
-          </div>
-        </div>
+  <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-        <!-- Deskripsi -->
-        <div class="prose max-w-none">
-          <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">Deskripsi Lengkap</h3>
-          <p id="modalDescription" class="text-gray-700 leading-relaxed text-sm sm:text-lg"></p>
-        </div>
+</div>
 
-        <!-- 📱 Harga & Tombol Aksi - Stack di Mobile -->
-        <div class="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t sticky bottom-0 bg-white pb-2 sm:pb-0 sm:static sm:bg-transparent">
-          <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="text-center sm:text-left">
-              <span class="text-gray-500 text-sm">Harga</span>
-              <p id="modalPrice" class="text-3xl sm:text-4xl font-bold text-emerald-600"></p>
-            </div>
-            <div class="flex gap-3 w-full sm:w-auto">
-              <button onclick="orderNow(currentProductId)" 
-                      class="btn-order btn-action flex-1 sm:flex-none text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl text-base sm:text-lg font-medium flex items-center justify-center gap-2 sm:gap-3">
-                <i class="fas fa-bolt"></i> <span class="hidden sm:inline">Order Now</span><span class="sm:hidden">Order</span>
-              </button>
-              <button onclick="closeModal()" 
-                      class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl text-base sm:text-lg font-medium flex items-center gap-2 sm:gap-3">
-                <i class="fas fa-times"></i> <span class="hidden sm:inline">Tutup</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Spacer untuk mobile sticky button -->
-        <div class="h-4 sm:hidden"></div>
-      </div>
-    </div>
-  </div>
+<script>
+/* ================= DATA ================= */
+let products = [];
 
-  <!-- MODAL KONFIRMASI ORDER - Mobile Friendly -->
-  <div id="orderModal" class="hidden fixed inset-0 bg-black/70 flex items-end sm:items-center justify-center z-[100] p-0 sm:p-4">
-    <div class="modal bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md sm:mx-4 modal-content p-6 sm:p-8 text-center">
-      <button onclick="closeOrderModal()" class="absolute top-4 right-4 w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-600">
-        <i class="fas fa-times"></i>
-      </button>
-      
-      <div class="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-        <i class="fas fa-check text-2xl sm:text-3xl text-emerald-600"></i>
-      </div>
-      <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Pesanan Dikirim!</h3>
-      <p id="orderMessage" class="text-gray-600 text-sm sm:text-base mb-6 sm:mb-8">
-        Terima kasih telah memesan <span id="orderProductName" class="font-semibold"></span>.<br class="sm:hidden">
-        Tim kami akan segera menghubungi Anda.
+/* ================= LOAD JSON ================= */
+async function loadProducts() {
+  try {
+    const res = await fetch('data.json');
+
+    if (!res.ok) throw new Error('Gagal load');
+
+    const data = await res.json();
+
+    if (!Array.isArray(data)) throw new Error('Format salah');
+
+    products = data;
+    renderCatalog(products);
+
+  } catch (err) {
+    console.error(err);
+    alert('Gagal memuat data.json');
+  }
+}
+
+/* ================= RENDER ================= */
+function renderCatalog(data) {
+  const grid = document.getElementById('catalogGrid');
+
+  grid.innerHTML = data.map(p => `
+    <div class="card-hover bg-white rounded-2xl shadow p-4">
+      <img src="${p.image}" class="w-full h-48 object-cover rounded-xl mb-3">
+
+      <h3 class="font-semibold text-lg">${p.title}</h3>
+      <p class="text-emerald-600 font-bold mb-2">
+        Rp ${p.price.toLocaleString('id-ID')}
       </p>
-      <div class="flex flex-col sm:flex-row gap-3">
-        <button onclick="closeOrderModal()" 
-                class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 sm:py-4 rounded-2xl font-medium">
-          Tutup
-        </button>
-        <button onclick="whatsappOrder()" 
-                class="w-full bg-green-500 hover:bg-green-600 text-white py-3 sm:py-4 rounded-2xl font-medium flex items-center justify-center gap-2">
-          <i class="fab fa-whatsapp"></i> Chat WA
-        </button>
-      </div>
+
+      <p class="text-sm text-gray-600 mb-3">
+        ${p.description.substring(0, 80)}...
+      </p>
+
+      <button onclick="orderNow(${p.id})"
+        class="btn-order w-full text-white py-2 rounded-xl">
+        Order
+      </button>
     </div>
-  </div>
+  `).join('');
+}
 
-  <!-- MODAL TAMBAH BARANG -->
-  <div id="addModal" class="hidden fixed inset-0 bg-black/70 flex items-end sm:items-center justify-center z-[100] p-0 sm:p-4">
-    <div class="modal bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-lg sm:mx-4 modal-content p-6 sm:p-8">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl sm:text-2xl font-bold">Tambah Barang Baru</h2>
-        <button onclick="closeAddModal()" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-600">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <form id="addForm" onsubmit="addProduct(event)">
-        <div class="space-y-4">
-          <input type="text" id="addTitle" placeholder="Nama Produk" required class="w-full px-4 py-3 rounded-2xl border focus:outline-none focus:border-emerald-500">
-          <input type="url" id="addImage" placeholder="URL Gambar Utama" required class="w-full px-4 py-3 rounded-2xl border focus:outline-none focus:border-emerald-500">
-          <input type="number" id="addPrice" placeholder="Harga (contoh: 1299000)" required class="w-full px-4 py-3 rounded-2xl border focus:outline-none focus:border-emerald-500">
-          <textarea id="addDescription" rows="3" placeholder="Deskripsi lengkap" required class="w-full px-4 py-3 rounded-2xl border focus:outline-none focus:border-emerald-500"></textarea>
-          <input type="text" id="addExtraImages" placeholder="Foto tambahan (pisahkan dengan koma)" class="w-full px-4 py-3 rounded-2xl border focus:outline-none focus:border-emerald-500">
-        </div>
-        <div class="flex gap-3 mt-6">
-          <button type="button" onclick="closeAddModal()" 
-                  class="flex-1 py-3 text-gray-600 font-medium bg-gray-100 hover:bg-gray-200 rounded-2xl">Batal</button>
-          <button type="submit" 
-                  class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-medium">Tambah</button>
-        </div>
-      </form>
-    </div>
-  </div>
+/* ================= SEARCH ================= */
+function filterProducts() {
+  const keyword = document.getElementById('searchInput').value.toLowerCase();
 
-  <!-- TOAST NOTIFIKASI -->
-  <div id="toast" class="hidden fixed bottom-4 sm:bottom-6 right-4 sm:right-6 bg-gray-900 text-white px-5 sm:px-6 py-3 sm:py-4 rounded-2xl shadow-lg z-[200] flex items-center gap-3 max-w-[calc(100%-2rem)]">
-    <i class="fas fa-info-circle flex-shrink-0"></i>
-    <span id="toastMessage" class="text-sm sm:text-base break-words"></span>
-  </div>
+  const filtered = products.filter(p =>
+    p.title.toLowerCase().includes(keyword) ||
+    p.description.toLowerCase().includes(keyword)
+  );
 
-  <script>
-    // ================== DATA PRODUK ==================
-    let products = [
-      {
-        id: 1,
-        title: "Headphone Wireless Premium",
-        image: "https://picsum.photos/id/20/600/600",
-        price: 1299000,
-        description: "Headphone nirkabel dengan noise cancellation aktif, baterai tahan 40 jam, suara jernih, dan desain ergonomis. Cocok untuk kerja, gaming, dan traveling.",
-        extraImages: [
-          "https://picsum.photos/id/21/600/600",
-          "https://picsum.photos/id/22/600/600",
-          "https://picsum.photos/id/23/600/600"
-        ]
-      },
-      {
-        id: 2,
-        title: "Smartwatch Ultra 2",
-        image: "https://picsum.photos/id/30/600/600",
-        price: 2499000,
-        description: "Smartwatch premium dengan layar AMOLED 1.9 inci, sensor kesehatan lengkap, GPS, dan tahan air 100 meter. Bisa panggil darurat dan pantau tidur.",
-        extraImages: [
-          "https://picsum.photos/id/31/600/600",
-          "https://picsum.photos/id/32/600/600"
-        ]
-      },
-      {
-        id: 3,
-        title: "Power Bank 20000mAh Fast Charge",
-        image: "https://picsum.photos/id/40/600/600",
-        price: 399000,
-        description: "Powerbank kapasitas besar dengan PD 65W, 3 port output, LED display, dan desain tipis. Bisa charge 4 kali untuk iPhone 15.",
-        extraImages: ["https://picsum.photos/id/41/600/600"]
-      },
-      {
-        id: 4,
-        title: "Mouse Wireless Ergonomis",
-        image: "https://picsum.photos/id/50/600/600",
-        price: 299000,
-        description: "Mouse nirkabel dengan sensor 16000 DPI, 8 tombol programmable, baterai tahan 6 bulan, dan grip nyaman untuk kerja lama.",
-        extraImages: [
-          "https://picsum.photos/id/51/600/600",
-          "https://picsum.photos/id/52/600/600"
-        ]
-      }
-    ];
+  renderCatalog(filtered);
+}
 
-    let currentProductId = null;
-    let orderProduct = null;
+/* ================= ORDER ================= */
+function orderNow(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
 
-    // Render katalog
-    function renderCatalog(filteredProducts) {
-      const grid = document.getElementById('catalogGrid');
-      grid.innerHTML = filteredProducts.map(p => `
-        <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-md flex flex-col">
-          <div onclick="showDetail(${p.id})" class="cursor-pointer">
-            <img src="${p.image}" class="w-full h-48 sm:h-64 object-cover">
-            <div class="p-5">
-              <h3 class="font-semibold text-lg sm:text-xl mb-2 line-clamp-2">${p.title}</h3>
-              <p class="text-emerald-600 text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Rp ${p.price.toLocaleString('id-ID')}</p>
-              <p class="text-gray-600 text-sm line-clamp-3 mb-4">${p.description.substring(0, 100)}...</p>
-            </div>
-          </div>
-          
-          <!-- Tombol Aksi -->
-          <div class="px-5 pb-5 flex gap-2 sm:gap-3">
-            <button onclick="showDetail(${p.id}); showToast('🔍 Preview ${p.title}')" 
-                    class="btn-preview btn-action flex-1 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl font-medium flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-              <i class="fas fa-eye"></i> <span class="hidden sm:inline">Preview</span>
-            </button>
-            <button onclick="orderNow(${p.id})" 
-                    class="btn-order btn-action flex-1 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl font-medium flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-              <i class="fas fa-bolt"></i> <span class="hidden sm:inline">Order Now</span><span class="sm:hidden">Order</span>
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
+  const msg = `Halo, saya ingin pesan:\n${p.title}\nRp ${p.price.toLocaleString('id-ID')}`;
 
-    // Tampilkan modal detail
-    function showDetail(id) {
-      const product = products.find(p => p.id === id);
-      if (!product) return;
-      
-      currentProductId = id;
-      document.body.style.overflow = 'hidden'; // Prevent background scroll
+  window.open(`https://wa.me/6285712130175?text=${encodeURIComponent(msg)}`);
+}
 
-      document.getElementById('modalTitle').textContent = product.title;
-      document.getElementById('modalMainImage').src = product.image;
-      document.getElementById('modalPrice').innerHTML = `Rp ${product.price.toLocaleString('id-ID')}`;
-      document.getElementById('modalDescription').textContent = product.description;
+/* ================= INIT ================= */
+window.onload = loadProducts;
+</script>
 
-      const gallery = document.getElementById('modalGallery');
-      gallery.innerHTML = product.extraImages.map(url => `
-        <img src="${url}" class="w-20 h-20 sm:w-40 sm:h-40 object-cover rounded-xl sm:rounded-2xl flex-shrink-0 snap-center border-2 border-white shadow cursor-pointer hover:scale-105 transition" onclick="document.getElementById('modalMainImage').src=this.src">
-      `).join('');
-
-      const modal = document.getElementById('detailModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      
-      // Reset scroll position
-      setTimeout(() => {
-        document.querySelector('#detailModal .modal-content')?.scrollTo(0, 0);
-      }, 100);
-    }
-
-    function closeModal() {
-      const modal = document.getElementById('detailModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      document.body.style.overflow = ''; // Restore scroll
-      currentProductId = null;
-    }
-
-    // Fungsi Order Now
-    function orderNow(productId) {
-      const product = products.find(p => p.id === productId);
-      if (!product) return;
-      
-      orderProduct = product;
-      closeModal();
-      
-      document.getElementById('orderProductName').textContent = product.title;
-      document.getElementById('orderMessage').innerHTML = 
-        `Terima kasih telah memesan <span class="font-semibold text-emerald-600">${product.title}</span>.<br>
-         Harga: <span class="font-bold">Rp ${product.price.toLocaleString('id-ID')}</span><br><br>
-         Tim kami akan segera menghubungi Anda.`;
-      
-      const orderModal = document.getElementById('orderModal');
-      orderModal.classList.remove('hidden');
-      orderModal.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-      
-      showToast(`🛒 ${product.title} ditambahkan ke pesanan!`);
-    }
-
-    function closeOrderModal() {
-      const modal = document.getElementById('orderModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      document.body.style.overflow = '';
-      orderProduct = null;
-    }
-
-    // Order via WhatsApp
-    function whatsappOrder() {
-      if (!orderProduct) return;
-      
-      const message = `Halo, saya ingin memesan:\n\n📦 *${orderProduct.title}*\n💰 Harga: Rp ${orderProduct.price.toLocaleString('id-ID')}\n\nMohon informasi lebih lanjut. Terima kasih!`;
-      const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
-      
-      window.open(whatsappUrl, '_blank');
-      closeOrderModal();
-      showToast('📱 Membuka WhatsApp...');
-    }
-
-    // Filter search
-    function filterProducts() {
-      const keyword = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = products.filter(p => 
-        p.title.toLowerCase().includes(keyword) || 
-        p.description.toLowerCase().includes(keyword)
-      );
-      renderCatalog(filtered);
-    }
-
-    // Modal tambah barang
-    function showAddModal() {
-      document.getElementById('addModal').classList.remove('hidden');
-      document.getElementById('addModal').classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeAddModal() {
-      document.getElementById('addModal').classList.add('hidden');
-      document.getElementById('addModal').classList.remove('flex');
-      document.body.style.overflow = '';
-    }
-
-    function addProduct(e) {
-      e.preventDefault();
-      
-      const newProduct = {
-        id: Date.now(),
-        title: document.getElementById('addTitle').value,
-        image: document.getElementById('addImage').value,
-        price: parseInt(document.getElementById('addPrice').value),
-        description: document.getElementById('addDescription').value,
-        extraImages: document.getElementById('addExtraImages').value 
-          ? document.getElementById('addExtraImages').value.split(',').map(u => u.trim()) 
-          : []
-      };
-
-      products.unshift(newProduct);
-      renderCatalog(products);
-      closeAddModal();
-      document.getElementById('addForm').reset();
-      showToast('✅ Barang baru berhasil ditambahkan!');
-    }
-
-    // Toast Notification
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMessage').textContent = message;
-      toast.classList.remove('hidden');
-      
-      setTimeout(() => {
-        toast.classList.add('hidden');
-      }, 3000);
-    }
-
-    // Close modal ketika klik di luar / tombol close
-    window.onclick = function(event) {
-      if (event.target.id === 'detailModal') closeModal();
-      if (event.target.id === 'orderModal') closeOrderModal();
-      if (event.target.id === 'addModal') closeAddModal();
-    }
-
-    // Handle escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeModal();
-        closeOrderModal();
-        closeAddModal();
-      }
-    });
-
-    // Inisialisasi
-    window.onload = () => {
-      renderCatalog(products);
-    };
-  </script>
 </body>
 </html>
