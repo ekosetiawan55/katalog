@@ -12,11 +12,9 @@
 body { font-family: 'Poppins', sans-serif; background:#f8fafc; }
 .brand { font-family:'Playfair Display', serif; }
 
-/* CARD */
 .card { transition:0.3s; }
 .card:hover { transform:translateY(-8px); box-shadow:0 20px 40px rgba(0,0,0,0.1); }
 
-/* CINEMATIC */
 .cinematic-img { animation:zoom 8s ease-in-out infinite alternate; }
 @keyframes zoom { from{transform:scale(1)} to{transform:scale(1.1)} }
 
@@ -25,14 +23,12 @@ body { font-family: 'Poppins', sans-serif; background:#f8fafc; }
   background:linear-gradient(to top,rgba(0,0,0,0.4),transparent);
 }
 
-/* MODAL */
 .modal-box { animation:fade 0.5s ease; }
 @keyframes fade {
   from{opacity:0; transform:translateY(30px) scale(0.95);}
   to{opacity:1; transform:translateY(0) scale(1);}
 }
 
-/* SLIDER */
 #sliderTrack { transition:transform 0.8s cubic-bezier(0.22,1,0.36,1); }
 </style>
 </head>
@@ -92,30 +88,30 @@ body { font-family: 'Poppins', sans-serif; background:#f8fafc; }
 </div>
 
 <script>
-let products=[];
-let currentProduct=null;
+let products = [];
+let currentProduct = null;
 
-/* SLIDER */
-let currentSlide=0;
-let currentGallery=[];
-let autoSlideInterval=null;
-
-/* ZOOM */
-let zoomLevel=1;
+let currentSlide = 0;
+let currentGallery = [];
+let autoSlideInterval = null;
+let zoomLevel = 1;
 
 /* LOAD */
 async function loadProducts(){
-  const res=await fetch('data.json');
-  const data=await res.json();
+  const res = await fetch('data.json');
+  const data = await res.json();
 
-  products=data.map(p=>({...p,image:"images/"+p.image}));
+  products = data.map(p => ({
+    ...p,
+    image: "images/" + p.image
+  }));
+
   renderCatalog(products);
 }
 
 /* RENDER */
 function renderCatalog(data){
-  const grid=document.getElementById('catalogGrid');
-  grid.innerHTML=data.map(p=>`
+  catalogGrid.innerHTML = data.map(p => `
     <div onclick="showDetail(${p.id})" class="card bg-white rounded-2xl p-4 cursor-pointer">
       <img src="${p.image}" class="w-full h-48 object-cover rounded-xl mb-3">
       <h3 class="font-semibold">${p.title}</h3>
@@ -126,68 +122,62 @@ function renderCatalog(data){
 
 /* DETAIL */
 function showDetail(id){
-  const p=products.find(x=>x.id===id);
-  if(!p) return;
+  const p = products.find(x => x.id === id);
+  if (!p) return;
 
-  currentProduct=p;
+  currentProduct = p;
 
-  modalTitle.textContent=p.title;
-  modalDesc.textContent=p.description;
-  modalPrice.textContent="Rp "+p.price.toLocaleString('id-ID');
+  modalTitle.textContent = p.title;
+  modalDesc.textContent = p.description;
+  modalPrice.textContent = "Rp " + p.price.toLocaleString('id-ID');
 
-  const gallery=p.gallery?.length?p.gallery:[p.image.replace("images/","")];
+  const gallery = p.gallery?.length ? p.gallery : [p.image.replace("images/","")];
   initSlider(gallery);
 
   detailModal.classList.remove('hidden');
 }
 
-/* SLIDER */
+/* INIT SLIDER */
 function initSlider(gallery){
-  const track=sliderTrack;
-  const dots=sliderDots;
+  currentGallery = gallery;
+  currentSlide = 0;
 
-  currentGallery=gallery;
-  currentSlide=0;
-
-  track.innerHTML=gallery.map((img,i)=>`
+  sliderTrack.innerHTML = gallery.map((img,i)=>`
     <div class="w-full flex-shrink-0 h-56 relative cinematic-overlay">
-      <img src="images/${img}"
-           onclick="openFullscreen(${i})"
-           class="cinematic-img w-full h-full object-cover cursor-zoom-in">
+      <img src="images/${img}" onclick="openFullscreen(${i})"
+        class="cinematic-img w-full h-full object-cover cursor-zoom-in">
     </div>
   `).join('');
 
-  dots.innerHTML=gallery.map((_,i)=>`
+  sliderDots.innerHTML = gallery.map((_,i)=>`
     <div onclick="goToSlide(${i})"
-      class="dot w-2.5 h-2.5 bg-gray-300 rounded-full cursor-pointer transition-all duration-300"></div>
+      class="dot w-2.5 h-2.5 bg-gray-300 rounded-full cursor-pointer transition-all"></div>
   `).join('');
 
-  function updateSlider(){
+  updateSlider();
+  startAutoSlide();
+}
+
+/* UPDATE */
+function updateSlider(){
   sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
 
-  const dots = document.querySelectorAll('#sliderDots .dot');
-
-  dots.forEach((dot, i) => {
-    if (i === currentSlide) {
-      dot.classList.remove('bg-gray-300');
-      dot.classList.add('bg-black', 'scale-125');
-    } else {
-      dot.classList.remove('bg-black', 'scale-125');
-      dot.classList.add('bg-gray-300');
-    }
+  document.querySelectorAll('#sliderDots .dot').forEach((dot,i)=>{
+    dot.classList.toggle('bg-black', i === currentSlide);
+    dot.classList.toggle('scale-125', i === currentSlide);
   });
 }
 
 /* NAV */
-function nextSlide(){currentSlide=(currentSlide+1)%currentGallery.length;updateSlider();}
-function prevSlide(){currentSlide=(currentSlide-1+currentGallery.length)%currentGallery.length;updateSlider();}
-function goToSlide(i){currentSlide=i;updateSlider();}
+function nextSlide(){ currentSlide=(currentSlide+1)%currentGallery.length; updateSlider(); }
+function prevSlide(){ currentSlide=(currentSlide-1+currentGallery.length)%currentGallery.length; updateSlider(); }
+function goToSlide(i){ currentSlide=i; updateSlider(); }
 
 /* AUTO */
-function startAutoSlide(){clearInterval(autoSlideInterval);autoSlideInterval=setInterval(nextSlide,3000);}
-function stopAutoSlide(){clearInterval(autoSlideInterval);}
+function startAutoSlide(){ clearInterval(autoSlideInterval); autoSlideInterval=setInterval(nextSlide,3000); }
+function stopAutoSlide(){ clearInterval(autoSlideInterval); }
 
-/* CLOSE MODAL (FIXED) */
+/* MODAL */
 function closeModal(){
   detailModal.classList.add('hidden');
   stopAutoSlide();
@@ -195,13 +185,13 @@ function closeModal(){
 
 /* FULLSCREEN */
 function openFullscreen(i){
-  currentSlide=i;
-  fullscreenImage.src="images/"+currentGallery[i];
+  currentSlide = i;
+  fullscreenImage.src = "images/" + currentGallery[i];
   fullscreenGallery.classList.remove('hidden');
 }
 function closeFullscreen(){
   fullscreenGallery.classList.add('hidden');
-  zoomLevel=1;
+  zoomLevel = 1;
   applyZoom();
 }
 
@@ -211,30 +201,33 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(img){
     img.addEventListener('wheel',e=>{
       e.preventDefault();
-      zoomLevel+=e.deltaY<0?0.1:-0.1;
-      zoomLevel=Math.max(1,Math.min(3,zoomLevel));
+      zoomLevel += e.deltaY < 0 ? 0.1 : -0.1;
+      zoomLevel = Math.max(1, Math.min(3, zoomLevel));
       applyZoom();
     });
   }
 });
 
 function applyZoom(){
-  fullscreenImage.style.transform=`scale(${zoomLevel})`;
+  fullscreenImage.style.transform = `scale(${zoomLevel})`;
 }
 
 /* SEARCH */
 function filterProducts(){
-  const k=searchInput.value.toLowerCase();
-  renderCatalog(products.filter(p=>p.title.toLowerCase().includes(k)));
+  const k = searchInput.value.toLowerCase();
+  renderCatalog(products.filter(p =>
+    p.title.toLowerCase().includes(k) ||
+    p.description.toLowerCase().includes(k)
+  ));
 }
 
 /* ORDER */
-btnOrder.onclick=function(){
-  if(!currentProduct)return;
+btnOrder.onclick = function(){
+  if(!currentProduct) return;
   window.open(`https://wa.me/6285712130175?text=${encodeURIComponent(currentProduct.title)}`);
 };
 
-window.onload=loadProducts;
+window.onload = loadProducts;
 </script>
 
 </body>
